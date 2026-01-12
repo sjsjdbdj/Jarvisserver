@@ -4,6 +4,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from datetime import datetime, timedelta
+from werkzeug.middleware.proxy_fix import ProxyFix
 import json
 import os
 
@@ -11,6 +12,11 @@ import os
 # CONFIGURACIÓN BÁSICA
 # =========================
 app = Flask(__name__)
+
+# 🔐 Necesario para Render + Google OAuth
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+app.config['PREFERRED_URL_SCHEME'] = 'https'
+
 app.secret_key = "0122"
 
 # Configuración para desarrollo local (cambiar en producción)
@@ -355,4 +361,5 @@ def process_command():
 # =========================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
+
     app.run(host="0.0.0.0", port=port)
