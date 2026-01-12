@@ -13,7 +13,7 @@
       --text-color: #000e1a;
       --chat-bg: rgba(255, 255, 255, 0.75);
     }
-    
+
     body.dark {
       --bg-color: #0a0f1c;
       --accent: #00bfff;
@@ -72,12 +72,12 @@
       border-radius: 50%;
       animation: spin 12s linear infinite;
     }
-    
+
     .jarvis-core.listening {
       animation: pulse-fast 0.8s infinite;
       background-color: rgba(var(--accent-rgb), 0.2);
     }
-    
+
     .jarvis-core.listening::before {
       animation: spin 4s linear infinite;
     }
@@ -87,7 +87,7 @@
       50% { box-shadow: 0 0 20px var(--accent); }
       100% { box-shadow: 0 0 10px var(--accent); }
     }
-    
+
     @keyframes pulse-fast {
       0% { box-shadow: 0 0 10px var(--accent); }
       50% { box-shadow: 0 0 30px var(--accent); }
@@ -105,7 +105,7 @@
       font-weight: 500;
       color: var(--accent);
     }
-    
+
     .info-bar {
       display: flex;
       justify-content: space-between;
@@ -169,7 +169,7 @@
       transition: background 0.3s;
       font-size: 0.9rem;
     }
-    
+
     .voice-btn {
       padding: 0 14px;
       background: var(--accent);
@@ -181,20 +181,20 @@
       align-items: center;
       justify-content: center;
     }
-    
+
     .voice-btn svg {
       width: 20px;
       height: 20px;
       fill: currentColor;
     }
-    
+
     .weather-info {
       display: flex;
       align-items: center;
       gap: 10px;
       font-size: 0.85rem;
     }
-    
+
     .weather-info img {
       width: 32px;
       height: 32px;
@@ -208,7 +208,7 @@
       gap: 8px;
       font-size: 0.85rem;
     }
-    
+
     .volume-control input {
       width: 100px;
     }
@@ -218,7 +218,7 @@
       color: #00ff88;
       animation: glow 1.5s ease-in-out infinite alternate;
     }
-    
+
     @keyframes glow {
       from { text-shadow: 0 0 5px #00ff88; }
       to { text-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88; }
@@ -236,7 +236,7 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-    
+
     .clear-history-btn:hover {
       background: #ff0000;
     }
@@ -255,7 +255,7 @@
       .chat-container {
         height: 400px;
       }
-      
+
       .info-bar {
         flex-direction: column;
         align-items: center;
@@ -283,9 +283,9 @@
 
   <button class="toggle-btn" onclick="toggleTheme()">Modo Claro/Oscuro</button>
   <button class="clear-history-btn" onclick="clearChatHistory()">Limpiar Historial</button>
-  
+
   <div class="jarvis-core" id="jarvisCore"></div>
-  
+
   <h1 id="mainTitle">
     {% if user %}
       Bienvenido de vuelta, {{ user.name.split.0 if user.name else 'Señor' }}
@@ -293,17 +293,17 @@
       Bienvenido, Humano
     {% endif %}
   </h1>
-  
+
   <div class="info-bar">
     <div id="dateTime">Cargando fecha y hora...</div>
     <div id="weatherInfo" class="weather-info">Cargando clima...</div>
   </div>
-  
+
   <!-- Indicador de comandos disponibles -->
   <div id="commandIndicator" style="margin: 5px 0; color: var(--accent); font-size: 0.8rem; display: none;">
     <span class="command-active">✓ Comandos de Calendario y Tareas Disponibles</span>
   </div>
-  
+
   <div class="chat-container">
     <div class="chat-messages" id="chatMessages">
       <!-- El historial se cargará desde localStorage -->
@@ -319,12 +319,12 @@
       <button id="sendButton">Enviar</button>
     </div>
   </div>
-  
+
   <div class="volume-control">
     <span>Volumen voz:</span>
     <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.8">
   </div>
-  
+
   <!-- Panel de ayuda para comandos -->
   <div id="helpPanel" style="margin-top: 15px; max-width: 720px; display: none;">
     <details>
@@ -335,17 +335,22 @@
         <div>• "Agenda una reunión [descripción] para mañana"</div>
         <div>• "¿Qué eventos tengo esta semana?"</div>
         <div>• "Muéstrame mi agenda de hoy"</div>
-        
+
         <div style="margin-top: 10px;"><strong>✅ Comandos de Tareas:</strong></div>
         <div>• "Añade una tarea: [descripción]"</div>
         <div>• "Crea un recordatorio para [tarea]"</div>
         <div>• "¿Qué tareas pendientes tengo?"</div>
         <div>• "Lista mis tareas por hacer"</div>
-        
+
         <div style="margin-top: 10px;"><strong>🔧 Comandos del Sistema:</strong></div>
         <div>• "¿Qué hora es?" / "¿Qué día es hoy?"</div>
         <div>• "¿Cómo está el clima?"</div>
         <div>• "¿Dónde estoy?"</div>
+        
+        <div style="margin-top: 10px;"><strong>🤖 Comandos de IA:</strong></div>
+        <div>• "¿Qué opinas sobre...?"</div>
+        <div>• "Ayúdame con..."</div>
+        <div>• "Explica..."</div>
       </div>
     </details>
   </div>
@@ -359,13 +364,9 @@
       CHAT_MESSAGES: 'jarvis_chat_messages',
       GOOGLE_CONNECTED: 'jarvis_google_connected'
     };
-    
-    // ===== CONFIGURACIÓN DE APIS =====
-    const OPENROUTER_API_KEY = "";
-    const model = "openai/gpt-3.5-turbo";
-    const ELEVENLABS_API_KEY = "";
-    const ELEVENLABS_VOICE_ID = "Nh2zY9kknu6z4pZy6FhD";
-    const WEATHER_API_KEY = "8328192daa1342fa9d921712251904";
+
+    // ===== CONFIGURACIÓN DE APIS (AHORA LLAMAN A TU BACKEND EN RENDER) =====
+    const BASE_URL = window.location.origin; // Esto apuntará automáticamente a tu app en Render
 
     /* Variables globales */
     let recognition = null;
@@ -378,13 +379,13 @@
     };
     let currentAudio = null;
     let isGoogleConnected = false;
-    
+
     /* Sistema de historial del chat con persistencia */
     let chatHistory = [];
     let chatMessages = [];
-    
+
     // ===== FUNCIONES DE PERSISTENCIA =====
-    
+
     /**
      * Guardar datos en localStorage
      */
@@ -405,7 +406,7 @@
         }
       }
     }
-    
+
     /**
      * Cargar datos desde localStorage
      */
@@ -418,7 +419,7 @@
         return defaultValue;
       }
     }
-    
+
     /**
      * Limpiar datos antiguos para liberar espacio
      */
@@ -429,7 +430,7 @@
         history.splice(0, history.length - 100);
         saveToStorage(STORAGE_KEYS.CHAT_HISTORY, history);
       }
-      
+
       // Mantener solo los últimos 50 mensajes de chat
       const messages = loadFromStorage(STORAGE_KEYS.CHAT_MESSAGES, []);
       if (messages.length > 50) {
@@ -437,7 +438,7 @@
         saveToStorage(STORAGE_KEYS.CHAT_MESSAGES, messages);
       }
     }
-    
+
     /**
      * Cargar todo el estado guardado
      */
@@ -450,11 +451,11 @@
       } else {
         document.documentElement.style.setProperty('--accent-rgb', "0, 119, 255");
       }
-      
+
       // Cargar volumen
       const savedVolume = loadFromStorage(STORAGE_KEYS.VOLUME, 0.8);
       document.getElementById('volumeControl').value = savedVolume;
-      
+
       // Cargar estado de Google
       const savedGoogleConnected = loadFromStorage(STORAGE_KEYS.GOOGLE_CONNECTED, false);
       isGoogleConnected = savedGoogleConnected;
@@ -462,7 +463,7 @@
         document.getElementById('commandIndicator').style.display = 'block';
         document.getElementById('helpPanel').style.display = 'block';
       }
-      
+
       // Cargar historial del chat
       const savedChatHistory = loadFromStorage(STORAGE_KEYS.CHAT_HISTORY, []);
       if (savedChatHistory.length > 0) {
@@ -501,18 +502,18 @@
           { role: "assistant", content: "¿En qué puedo ayudarte hoy, señor? Ahora puedo gestionar su calendario y tareas de Google." }
         ];
       }
-      
+
       // Cargar mensajes del chat visual
       const savedChatMessages = loadFromStorage(STORAGE_KEYS.CHAT_MESSAGES, []);
       chatMessages = savedChatMessages;
       displayChatMessages();
-      
+
       // Si no hay mensajes guardados, mostrar el mensaje inicial
       if (chatMessages.length === 0) {
         addToChat('JARVIS', '¿En qué puedo ayudarte?', false);
       }
     }
-    
+
     /**
      * Guardar el estado actual
      */
@@ -523,23 +524,23 @@
       saveToStorage(STORAGE_KEYS.CHAT_HISTORY, chatHistory);
       saveToStorage(STORAGE_KEYS.CHAT_MESSAGES, chatMessages);
     }
-    
+
     /**
      * Mostrar mensajes del chat desde el almacenamiento
      */
     function displayChatMessages() {
       const messagesContainer = document.getElementById('chatMessages');
       messagesContainer.innerHTML = '';
-      
+
       chatMessages.forEach(msg => {
         const div = document.createElement('div');
         div.innerHTML = `<strong>${msg.speaker}:</strong> ${msg.message}`;
         messagesContainer.appendChild(div);
       });
-      
+
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-    
+
     /**
      * Limpiar todo el historial del chat
      */
@@ -577,38 +578,38 @@
           },
           { role: "assistant", content: "¿En qué puedo ayudarte hoy, señor? He reiniciado nuestro historial de conversación." }
         ];
-        
+
         chatMessages = [];
-        
+
         // Limpiar localStorage
         localStorage.removeItem(STORAGE_KEYS.CHAT_HISTORY);
         localStorage.removeItem(STORAGE_KEYS.CHAT_MESSAGES);
-        
+
         // Actualizar la vista
         displayChatMessages();
-        
+
         // Añadir mensaje de confirmación
         addToChat('JARVIS', 'Historial de conversación reiniciado. ¿En qué puedo ayudarte ahora, señor?', true);
       }
     }
-    
+
     // ===== FUNCIONES DE INTEGRACIÓN CON GOOGLE CALENDAR Y TASKS =====
-    
+
     /**
      * Procesa comandos relacionados con Google Calendar y Tasks
      */
     async function processGoogleCommand(userMessage) {
       const lowerMsg = userMessage.toLowerCase();
-      
+
       // Comandos para crear eventos
       if (lowerMsg.includes('crea un evento') || lowerMsg.includes('agenda una reunión') || 
           lowerMsg.includes('programa una cita') || lowerMsg.includes('nuevo evento')) {
-        
+
         // Extraer detalles del mensaje (implementación básica)
         const eventTitle = extractEventTitle(lowerMsg);
         const eventDate = extractDate(lowerMsg);
         const eventTime = extractTime(lowerMsg);
-        
+
         if (eventTitle && eventDate && eventTime) {
           // Construir objeto de evento
           const eventData = {
@@ -617,8 +618,8 @@
             endTime: formatDateTime(eventDate, eventTime, 1), // +1 hora por defecto
             description: `Evento creado por JARVIS: ${eventTitle}`
           };
-          
-          // Crear evento en Google Calendar
+
+          // Crear evento en Google Calendar usando TU backend
           const result = await createCalendarEvent(eventData);
           return result;
         } else {
@@ -630,20 +631,20 @@
           };
         }
       }
-      
+
       // Comandos para crear tareas
       else if (lowerMsg.includes('añade una tarea') || lowerMsg.includes('crea una tarea') || 
                lowerMsg.includes('nueva tarea') || lowerMsg.includes('recordatorio para')) {
-        
+
         const taskTitle = extractTaskTitle(lowerMsg);
-        
+
         if (taskTitle) {
           const taskData = {
             title: taskTitle,
             description: `Tarea creada por JARVIS: ${taskTitle}`
           };
-          
-          // Crear tarea en Google Tasks
+
+          // Crear tarea en Google Tasks usando TU backend
           const result = await createTask(taskData);
           return result;
         } else {
@@ -654,40 +655,41 @@
           };
         }
       }
-      
+
       // Comandos para listar eventos
       else if (lowerMsg.includes('qué eventos tengo') || lowerMsg.includes('muestra mis eventos') || 
                lowerMsg.includes('mi agenda') || lowerMsg.includes('próximos eventos')) {
-        
+
         const result = await listEvents();
         return result;
       }
-      
+
       // Comandos para listar tareas
       else if (lowerMsg.includes('qué tareas tengo') || lowerMsg.includes('muestra mis tareas') || 
                lowerMsg.includes('tareas pendientes') || lowerMsg.includes('lista de tareas')) {
-        
+
         const result = await listTasks();
         return result;
       }
-      
+
       // Comando no reconocido
       return null;
     }
-    
+
     /**
-     * Crea un evento en Google Calendar
+     * Crea un evento en Google Calendar (llama a TU backend)
      */
     async function createCalendarEvent(eventData) {
       try {
-        const response = await fetch('/api/create-event', {
+        const response = await fetch(`${BASE_URL}/api/create-event`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(eventData)
+          body: JSON.stringify(eventData),
+          credentials: 'include' // Importante para mantener la sesión
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
           addToChat('Sistema', `✅ Evento creado: "${eventData.title}"`);
           speakWithElevenLabs(`Evento "${eventData.title}" creado exitosamente en su calendario.`);
@@ -702,20 +704,21 @@
         return { error: 'Error de conexión' };
       }
     }
-    
+
     /**
-     * Crea una tarea en Google Tasks
+     * Crea una tarea en Google Tasks (llama a TU backend)
      */
     async function createTask(taskData) {
       try {
-        const response = await fetch('/api/create-task', {
+        const response = await fetch(`${BASE_URL}/api/create-task`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(taskData)
+          body: JSON.stringify(taskData),
+          credentials: 'include'
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
           addToChat('Sistema', `✅ Tarea creada: "${taskData.title}"`);
           speakWithElevenLabs(`Tarea "${taskData.title}" añadida a su lista.`);
@@ -730,15 +733,17 @@
         return { error: 'Error de conexión' };
       }
     }
-    
+
     /**
-     * Lista eventos del calendario
+     * Lista eventos del calendario (llama a TU backend)
      */
     async function listEvents() {
       try {
-        const response = await fetch('/api/list-events');
+        const response = await fetch(`${BASE_URL}/api/list-events`, {
+          credentials: 'include'
+        });
         const result = await response.json();
-        
+
         if (result.success && result.events.length > 0) {
           let message = '📅 Sus próximos eventos:\n\n';
           result.events.forEach((event, index) => {
@@ -752,10 +757,10 @@
               hour: '2-digit',
               minute: '2-digit'
             });
-            
+
             message += `${index + 1}. ${event.summary}\n   📆 ${formattedDate} ⏰ ${formattedTime}\n\n`;
           });
-          
+
           addToChat('Calendario', message);
           speakWithElevenLabs(`Tiene ${result.events.length} eventos próximos en su calendario.`);
           return result;
@@ -773,21 +778,23 @@
         return { error: 'Error de conexión' };
       }
     }
-    
+
     /**
-     * Lista tareas pendientes
+     * Lista tareas pendientes (llama a TU backend)
      */
     async function listTasks() {
       try {
-        const response = await fetch('/api/list-tasks');
+        const response = await fetch(`${BASE_URL}/api/list-tasks`, {
+          credentials: 'include'
+        });
         const result = await response.json();
-        
+
         if (result.success && result.tasks.length > 0) {
           let message = '✅ Sus tareas pendientes:\n\n';
           result.tasks.forEach((task, index) => {
             message += `${index + 1}. ${task.title}\n`;
           });
-          
+
           addToChat('Tareas', message);
           speakWithElevenLabs(`Tiene ${result.tasks.length} tareas pendientes en su lista.`);
           return result;
@@ -805,9 +812,9 @@
         return { error: 'Error de conexión' };
       }
     }
-    
+
     // ===== FUNCIONES AUXILIARES PARA PROCESAR COMANDOS =====
-    
+
     /**
      * Extrae el título de un evento del mensaje
      */
@@ -817,14 +824,14 @@
         /agenda una reunión (?:sobre|acerca de) (.+?)(?: el| para|$)/i,
         /programa (.+?)(?: el| para|$)/i
       ];
-      
+
       for (const pattern of patterns) {
         const match = message.match(pattern);
         if (match && match[1]) {
           return match[1].trim();
         }
       }
-      
+
       // Si no se encuentra patrón, intentar extraer después de palabras clave
       const keywords = ['evento', 'reunión', 'cita'];
       for (const keyword of keywords) {
@@ -842,10 +849,10 @@
           }
         }
       }
-      
+
       return null;
     }
-    
+
     /**
      * Extrae el título de una tarea
      */
@@ -855,23 +862,23 @@
         /crea una tarea (?:sobre|acerca de) (.+?)(?: para|$)/i,
         /recordatorio para (.+?)(?:$)/i
       ];
-      
+
       for (const pattern of patterns) {
         const match = message.match(pattern);
         if (match && match[1]) {
           return match[1].trim();
         }
       }
-      
+
       return null;
     }
-    
+
     /**
      * Extrae fecha del mensaje (implementación básica)
      */
     function extractDate(message) {
       const today = new Date();
-      
+
       if (message.includes('hoy')) {
         return today;
       } else if (message.includes('mañana')) {
@@ -883,53 +890,53 @@
         dayAfter.setDate(dayAfter.getDate() + 2);
         return dayAfter;
       }
-      
+
       // Por defecto, devolver hoy
       return today;
     }
-    
+
     /**
      * Extrae hora del mensaje (implementación básica)
      */
     function extractTime(message) {
       const timePattern = /a las (\d{1,2})(?::(\d{2}))?(?:\s?(am|pm))?/i;
       const match = message.match(timePattern);
-      
+
       if (match) {
         let hours = parseInt(match[1]);
         const minutes = match[2] ? parseInt(match[2]) : 0;
         const period = match[3] ? match[3].toLowerCase() : '';
-        
+
         // Convertir a formato 24h si es necesario
         if (period === 'pm' && hours < 12) {
           hours += 12;
         } else if (period === 'am' && hours === 12) {
           hours = 0;
         }
-        
+
         return { hours, minutes };
       }
-      
+
       // Por defecto, devolver 10:00
       return { hours: 10, minutes: 0 };
     }
-    
+
     /**
      * Formatea fecha y hora para la API
      */
     function formatDateTime(date, time, hoursToAdd = 0) {
       const eventDate = new Date(date);
       eventDate.setHours(time.hours, time.minutes, 0, 0);
-      
+
       if (hoursToAdd > 0) {
         eventDate.setHours(eventDate.getHours() + hoursToAdd);
       }
-      
+
       return eventDate.toISOString();
     }
-    
+
     // ===== FUNCIONES BÁSICAS DEL CHAT =====
-    
+
     /**
      * Añade un mensaje al chat (con persistencia)
      */
@@ -939,41 +946,41 @@
       div.innerHTML = `<strong>${speaker}:</strong> ${message}`;
       messages.appendChild(div);
       messages.scrollTop = messages.scrollHeight;
-      
+
       // Guardar en el array de mensajes
       if (saveToHistory) {
         chatMessages.push({ speaker, message, timestamp: Date.now() });
         saveCurrentState();
       }
     }
-    
+
     /**
-     * Envía un mensaje al chat (función principal)
+     * Envía un mensaje al chat (función principal) - AHORA USA TU BACKEND
      */
     async function sendMessage() {
       const input = document.getElementById('chatInput');
       const userMessage = input.value.trim();
-      
+
       if (!userMessage) return;
-      
+
       // Agregar mensaje del usuario al chat
       addToChat('Tú', userMessage);
       input.value = '';
-      
+
       // Verificar si el usuario está autenticado con Google
       const userAuthenticated = document.querySelector('div[style*="margin:10px;"]') !== null;
-      
+
       if (userAuthenticated && !isGoogleConnected) {
         isGoogleConnected = true;
         document.getElementById('commandIndicator').style.display = 'block';
         document.getElementById('helpPanel').style.display = 'block';
         saveCurrentState(); // Guardar el estado de conexión
       }
-      
+
       // 1. Primero, verificar si es un comando de Google Calendar/Tasks
       if (isGoogleConnected) {
         const googleResult = await processGoogleCommand(userMessage);
-        
+
         if (googleResult) {
           // Si el comando necesita más detalles, dejar que JARVIS pregunte
           if (googleResult.action === 'need_details') {
@@ -992,69 +999,67 @@
           }
         }
       }
-      
-      // 2. Si no es comando específico, usar la IA normal
+
+      // 2. Si no es comando específico, usar la IA normal (ahora llama a TU backend)
       chatHistory.push({ role: "user", content: userMessage });
-      
+
       const botDiv = document.createElement('div');
       botDiv.innerHTML = `<strong>JARVIS:</strong> <em>pensando...</em>`;
       document.getElementById('chatMessages').appendChild(botDiv);
-      
+
       try {
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        // Llama a TU backend Flask en lugar de a OpenRouter directamente
+        const response = await fetch(`${BASE_URL}/api/openrouter/chat`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-            "HTTP-Referer": window.location.origin,
-            "X-Title": "JARVIS Assistant"
           },
           body: JSON.stringify({
-            model: model,
-            messages: chatHistory,
-            max_tokens: 500,
-            temperature: 0.7
+            messages: chatHistory
           })
         });
-        
+
         const data = await response.json();
-        
-        if (data?.choices?.[0]?.message) {
-          const reply = data.choices[0].message.content;
+
+        if (data.success) {
+          const reply = data.message;
           chatHistory.push({ role: "assistant", content: reply });
-          
+
           // Reemplazar el mensaje "pensando..." por la respuesta real
           botDiv.innerHTML = `<strong>JARVIS:</strong> ${reply}`;
-          
+
           // Agregar al historial persistente
           chatMessages.push({ speaker: 'JARVIS', message: reply, timestamp: Date.now() });
-          
+
+          // Usar TU backend para generar la voz
           speakWithElevenLabs(reply);
           saveCurrentState(); // Guardar después de la respuesta
+        } else {
+          throw new Error(data.error || 'Error desconocido');
         }
       } catch (error) {
         console.error("Error con la API:", error);
         const fallback = "Lo siento, estoy teniendo problemas de conexión. ¿Podría intentarlo de nuevo?";
         chatHistory.push({ role: "assistant", content: fallback });
         botDiv.innerHTML = `<strong>JARVIS:</strong> ${fallback}`;
-        
+
         // Agregar al historial persistente
         chatMessages.push({ speaker: 'JARVIS', message: fallback, timestamp: Date.now() });
-        
+
         speakWithElevenLabs(fallback);
         saveCurrentState(); // Guardar incluso en caso de error
       }
     }
-    
-    // ===== FUNCIONES ORIGINALES (MANTENIDAS) =====
-    
+
+    // ===== FUNCIONES ORIGINALES (MANTENIDAS CON MEJORAS) =====
+
     /* Función para alternar entre modo claro y oscuro */
     function toggleTheme() {
       document.body.classList.toggle("dark");
       document.documentElement.style.setProperty('--accent-rgb', document.body.classList.contains("dark") ? "0, 191, 255" : "0, 119, 255");
       saveCurrentState(); // Guardar preferencia de tema
     }
-    
+
     /* Inicializar reconocimiento de voz */
     function initSpeechRecognition() {
       if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
@@ -1063,25 +1068,25 @@
         recognition.lang = 'es-ES';
         recognition.continuous = false;
         recognition.interimResults = false;
-        
+
         recognition.onstart = function() {
           isListening = true;
           document.getElementById('jarvisCore').classList.add('listening');
           document.getElementById('voiceButton').style.background = '#ff4500';
         };
-        
+
         recognition.onresult = function(event) {
           const transcript = event.results[0][0].transcript;
           document.getElementById('chatInput').value = transcript;
           setTimeout(() => sendMessage(), 300);
         };
-        
+
         recognition.onend = function() {
           isListening = false;
           document.getElementById('jarvisCore').classList.remove('listening');
           document.getElementById('voiceButton').style.background = '';
         };
-        
+
         recognition.onerror = function(event) {
           isListening = false;
           document.getElementById('jarvisCore').classList.remove('listening');
@@ -1093,18 +1098,18 @@
         document.getElementById('voiceButton').style.display = 'none';
       }
     }
-    
+
     /* Toggle reconocimiento de voz */
     function toggleSpeechRecognition() {
       if (!recognition) return;
-      
+
       if (isListening) {
         recognition.stop();
       } else {
         recognition.start();
       }
     }
-    
+
     /* Obtener ubicación actual del usuario */
     function getUserLocation() {
       if (navigator.geolocation) {
@@ -1113,6 +1118,7 @@
             userLocation.latitude = position.coords.latitude;
             userLocation.longitude = position.coords.longitude;
             getReverseGeocoding(position.coords.latitude, position.coords.longitude);
+            // Usar TU backend para obtener el clima (proxy)
             getWeatherData(position.coords.latitude, position.coords.longitude);
           },
           error => {
@@ -1124,13 +1130,13 @@
         document.getElementById('weatherInfo').textContent = "Geolocalización no soportada";
       }
     }
-    
+
     /* Obtener nombre de la ciudad a partir de coordenadas */
     async function getReverseGeocoding(lat, lon) {
       try {
         const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
         const data = await response.json();
-        
+
         if (data && data.address) {
           userLocation.city = data.address.city || data.address.town || data.address.village || data.address.hamlet;
           userLocation.country = data.address.country;
@@ -1139,30 +1145,32 @@
         console.error("Error al obtener el nombre de la ciudad:", error);
       }
     }
-    
-    /* Obtener datos del clima */
+
+    /* Obtener datos del clima usando TU backend como proxy */
     async function getWeatherData(lat, lon) {
       try {
-        const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${lat},${lon}&lang=es`);
+        const response = await fetch(`${BASE_URL}/api/weather?lat=${lat}&lon=${lon}`);
         const data = await response.json();
-        
+
         if (data && data.current) {
           const temp = data.current.temp_c;
           const condition = data.current.condition.text;
           const icon = data.current.condition.icon;
-          
+
           const weatherDiv = document.getElementById('weatherInfo');
           weatherDiv.innerHTML = `
             <img src="${icon}" alt="${condition}">
             <span>${temp}°C - ${condition}</span>
           `;
+        } else if (data.error) {
+          document.getElementById('weatherInfo').textContent = "Clima no disponible";
         }
       } catch (error) {
         console.error("Error al obtener datos del clima:", error);
         document.getElementById('weatherInfo').textContent = "Clima no disponible";
       }
     }
-    
+
     /* Actualizar fecha y hora en tiempo real */
     function updateDateTime() {
       const now = new Date();
@@ -1175,14 +1183,14 @@
         minute: '2-digit',
         second: '2-digit'
       };
-      
+
       const formattedDateTime = now.toLocaleDateString('es-ES', options);
       document.getElementById('dateTime').textContent = formattedDateTime;
-      
+
       setTimeout(updateDateTime, 1000);
     }
 
-    /* Función para usar ElevenLabs Text-to-Speech */
+    /* Función para usar ElevenLabs Text-to-Speech - AHORA USA TU BACKEND */
     async function speakWithElevenLabs(text) {
       try {
         // Detener audio actual si está reproduciéndose
@@ -1190,59 +1198,56 @@
           currentAudio.pause();
           currentAudio = null;
         }
-        
+
         const volume = parseFloat(document.getElementById('volumeControl').value);
-        
-        const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`, {
+
+        // Llama a TU backend para generar el audio
+        const response = await fetch(`${BASE_URL}/api/elevenlabs/speak`, {
           method: 'POST',
           headers: {
-            'Accept': 'audio/mpeg',
             'Content-Type': 'application/json',
-            'xi-api-key': ELEVENLABS_API_KEY
           },
           body: JSON.stringify({
-            text: text,
-            model_id: "eleven_multilingual_v2",
-            voice_settings: {
-              stability: 0.5,
-              similarity_boost: 0.75,
-              style: 0.3,
-              use_speaker_boost: true
-            }
+            text: text
           })
         });
 
-        if (!response.ok) {
-          throw new Error(`Error ElevenLabs: ${response.status}`);
-        }
+        if (response.ok) {
+          // Obtener el audio como blob
+          const audioBlob = await response.blob();
+          const audioUrl = URL.createObjectURL(audioBlob);
 
-        const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        
-        currentAudio = new Audio(audioUrl);
-        currentAudio.volume = volume;
-        currentAudio.play();
-        
-        currentAudio.onended = () => {
-          URL.revokeObjectURL(audioUrl);
-          currentAudio = null;
-        };
-        
-        currentAudio.onerror = (error) => {
-          console.error('Error reproduciendo audio:', error);
-          URL.revokeObjectURL(audioUrl);
-          currentAudio = null;
+          currentAudio = new Audio(audioUrl);
+          currentAudio.volume = volume;
+          currentAudio.play();
+
+          currentAudio.onended = () => {
+            URL.revokeObjectURL(audioUrl);
+            currentAudio = null;
+          };
+
+          currentAudio.onerror = (error) => {
+            console.error('Error reproduciendo audio:', error);
+            URL.revokeObjectURL(audioUrl);
+            currentAudio = null;
+            // Fallback a voz del navegador
+            speakWithBrowser(text);
+          };
+
+        } else {
+          const errorData = await response.json();
+          console.error('Error de ElevenLabs:', errorData);
           // Fallback a voz del navegador
           speakWithBrowser(text);
-        };
-        
+        }
+
       } catch (error) {
         console.error('Error con ElevenLabs:', error);
-        // Fallback a voz del navegador si ElevenLabs falla
+        // Fallback a voz del navegador
         speakWithBrowser(text);
       }
     }
-    
+
     /* Función fallback para voz del navegador */
     function speakWithBrowser(text) {
       if ('speechSynthesis' in window) {
@@ -1254,7 +1259,7 @@
         window.speechSynthesis.speak(speech);
       }
     }
-    
+
     /* Detener audio actual */
     function stopCurrentAudio() {
       if (currentAudio) {
@@ -1265,26 +1270,26 @@
         window.speechSynthesis.cancel();
       }
     }
-    
+
     /* Guardar volumen cuando cambie */
     function onVolumeChange() {
       saveCurrentState();
     }
-    
+
     // ===== EVENT LISTENERS =====
     document.addEventListener('DOMContentLoaded', function() {
       // Cargar estado guardado
       loadSavedState();
-      
+
       // Inicializar reconocimiento de voz
       initSpeechRecognition();
-      
+
       // Obtener ubicación y clima
       getUserLocation();
-      
+
       // Actualizar fecha y hora
       updateDateTime();
-      
+
       // Mostrar panel de ayuda si el usuario está autenticado
       const userAuthenticated = document.querySelector('div[style*="margin:10px;"]') !== null;
       if (userAuthenticated) {
@@ -1293,25 +1298,25 @@
         document.getElementById('helpPanel').style.display = 'block';
         saveCurrentState();
       }
-      
+
       // Event listener para el botón de enviar
       document.getElementById('sendButton').addEventListener('click', sendMessage);
-      
+
       // Event listener para el botón de voz
       document.getElementById('voiceButton').addEventListener('click', toggleSpeechRecognition);
-      
+
       // Event listener para enviar mensaje con Enter
       document.getElementById('chatInput').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
           sendMessage();
         }
       });
-      
+
       // Event listener para detener audio cuando se envía un nuevo mensaje
       document.getElementById('chatInput').addEventListener('focus', function() {
         stopCurrentAudio();
       });
-      
+
       // Event listener para control de volumen
       const volumeControl = document.getElementById('volumeControl');
       volumeControl.addEventListener('input', function() {
@@ -1320,26 +1325,27 @@
         }
       });
       volumeControl.addEventListener('change', onVolumeChange);
-      
+
       // Guardar estado antes de que la página se cierre
       window.addEventListener('beforeunload', function() {
         saveCurrentState();
       });
-      
+
       // Guardar estado periódicamente (cada 30 segundos)
       setInterval(saveCurrentState, 30000);
-      
+
       // Sugerir comandos al hacer clic en el input
       document.getElementById('chatInput').addEventListener('click', function() {
         if (isGoogleConnected && this.placeholder === "Escribe tu mensaje o comando...") {
           const suggestions = [
             "Ej: 'Crea un evento llamado Reunión con el equipo mañana a las 10am'",
             "Ej: 'Añade una tarea: Comprar suministros'",
-            "Ej: '¿Qué eventos tengo esta semana?'"
+            "Ej: '¿Qué eventos tengo esta semana?'",
+            "Ej: '¿Qué opinas sobre la inteligencia artificial?'"
           ];
           const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
           this.placeholder = randomSuggestion;
-          
+
           setTimeout(() => {
             this.placeholder = "Escribe tu mensaje o comando...";
           }, 3000);
